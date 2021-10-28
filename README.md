@@ -1,14 +1,15 @@
 PDFCon
 ======================
 
-PDF manupilation tool with GUI. Powered by pikepdf/wxWidgets.
+PDFCon is a pdf manupilating tool with GUI. Powered by pikepdf/wxWidgets.
 
-Now impelemts functions for concat/encrypt/decrypt PDF. It tested only on Windows.
+This program now impelemts functions to concat/encrypt/decrypt PDF. It tested only on Windows.
 
 ![screenshot](https://user-images.githubusercontent.com/20105619/139176190-b6c960a7-67eb-46b2-96ba-36e9c703b811.png)
 
-
 # Usage
+
+## start with python command
 
 If you have not use pipenv, install it.
 
@@ -17,7 +18,7 @@ pip install pipenv
 ```
 
 Clone this repository, and move into repository folder which has Pipfile.
-Then run `pipenv install`
+Then install related components.
 
 ```bash
 pipenv install
@@ -28,7 +29,6 @@ Finally, you can run application via pipenv.
 ```bash
 pipenv run python src/mainw.py
 ```
-
 
 # Release Notes
 
