@@ -1,0 +1,4 @@
+
+
+class SelectionNotContinuousException(Exception):
+    pass
