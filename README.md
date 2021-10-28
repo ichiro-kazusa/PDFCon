@@ -27,7 +27,7 @@ pipenv install
 Finally, you can run application via pipenv.
 
 ```bash
-pipenv run python src/mainw.py
+pipenv run python mainw.py
 ```
 
 # Release Notes

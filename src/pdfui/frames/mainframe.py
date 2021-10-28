@@ -1,7 +1,8 @@
 import wx
-from pdf.appsvc import PDFAppSevice
-from pdf.event import event, error
-from pdf.repo.pdfrepo import PikePDFRepository
+from src.pdf.appsvc import PDFAppSevice
+from src.pdf.event import event, error
+from src.pdf.repo.pdfrepo import PikePDFRepository
+
 
 from ..error.error import SelectionNotContinuousException
 from .droptarget import ListFileDropTarget, PickerFileDropTarget
@@ -140,7 +141,7 @@ class MainFrame(MyFrame):
     def decrypt_clickfilldstbtn(self, _):
         source: str = self.decrypt_srcpicker.GetPath()
         if source.endswith('.pdf'):
-            dstpath = source.removesuffix('.pdf') + '_decrypt.pdf'
+            dstpath = source[:-4] + '_decrypt.pdf'
             self.decrypt_dstpicker.SetPath(dstpath)
 
     def decrypt_clickdecryptbtn(self, _):
@@ -161,7 +162,7 @@ class MainFrame(MyFrame):
     def encrypt_clickfilldstbtn(self, _):
         source: str = self.encrypt_srcpicker.GetPath()
         if source.endswith('.pdf'):
-            dstpath = source.removesuffix('.pdf') + '_encrypt.pdf'
+            dstpath = source[:-4] + '_encrypt.pdf'
             self.encrypt_dstpicker.SetPath(dstpath)
 
     def encrypt_clickencryptbtn(self, _):

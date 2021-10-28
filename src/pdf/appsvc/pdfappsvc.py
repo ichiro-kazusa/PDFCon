@@ -1,15 +1,34 @@
+from typing import List
+
 from ..event import error
 from ..domain.pdffile import PdfSrcList, PdfDstFile, PdfSrcFile
 from ..repo.pdfrepo import IPDFRepository
 from ..domain.encrypt import Encryption
 
 
-class PDFAppSevice:
+class IPDFAppSevice:
+
+    def __init__(self, pdf_repository: IPDFRepository):
+        pass
+
+    def concat_pdf(self, pdfsrcpaths: List[str], pdfdst: str) -> None:
+        pass
+
+    def decrypt_pdf(self, pdfsrcpath: str,
+                    password: str, pdfdstpath: str) -> None:
+        pass
+
+    def encrypt_pdf(self, pdfsrcpath: str, pdfdstpath: str,
+                    writepass: str, readpass: str = '') -> None:
+        pass
+
+
+class PDFAppSevice(IPDFAppSevice):
 
     def __init__(self, pdf_repository: IPDFRepository):
         self.__pdfrepo = pdf_repository
 
-    def concat_pdf(self, pdfsrcpaths: list[str], pdfdst: str) -> None:
+    def concat_pdf(self, pdfsrcpaths: List[str], pdfdst: str) -> None:
         """application service function to concat pdfs"""
 
         sources = PdfSrcList.create_pdfsrclist_frompath(pdfsrcpaths)

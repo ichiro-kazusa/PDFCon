@@ -1,5 +1,5 @@
 import wx
-from typing import Union
+from typing import Union, List
 from ..error.error import SelectionNotContinuousException
 
 
@@ -17,7 +17,7 @@ class wxListUtil:
             list.Select(idx)
 
     @staticmethod
-    def idxs_are_continuous(idxs: list[int]) -> bool:
+    def idxs_are_continuous(idxs: List[int]) -> bool:
         """check integer list is sorted and continuous."""
         if len(idxs) <= 1:
             return True  # empty or single array is continuous

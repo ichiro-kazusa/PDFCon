@@ -1,3 +1,4 @@
+from typing import List
 from src.pdf.event import event
 
 
@@ -6,16 +7,16 @@ class TestEventListener(event.BaseEventListener):
 
     def __init__(self):
         super().__init__()
-        self.__eventhistory: list[event.PDFEvent] = []
+        self.__eventhistory: List[event.PDFEvent] = []
 
     def update(self, event_: event.PDFEvent) -> None:
         self.__eventhistory.append(event_)
 
     @property
-    def event_history(self) -> list[event.PDFEvent]:
+    def event_history(self) -> List[event.PDFEvent]:
         return self.__eventhistory
 
-    def verify_history(self, eventlist: list[event.PDFEvent]):
+    def verify_history(self, eventlist: List[event.PDFEvent]):
         """verifies event history"""
         if len(self.__eventhistory) != len(eventlist):
             return False

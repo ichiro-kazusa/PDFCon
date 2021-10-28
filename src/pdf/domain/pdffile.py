@@ -1,6 +1,6 @@
 """Domain objects about PDF file."""
 # import re
-from typing import Generator
+from typing import Generator, List
 
 
 class PdfSrcFile:
@@ -25,7 +25,7 @@ class PdfSrcFile:
 class PdfSrcList:
     """First Class Collection to handle PdfSrcFile object"""
 
-    def __init__(self, pdfsrcfiles: list[PdfSrcFile] = None):
+    def __init__(self, pdfsrcfiles: List[PdfSrcFile] = None):
         self.__pdfsrclist = [] if pdfsrcfiles is None else pdfsrcfiles
 
     def append(self, pdfsrc: PdfSrcFile) -> None:
@@ -38,7 +38,7 @@ class PdfSrcList:
         return len(self.__pdfsrclist) == 0
 
     @staticmethod
-    def create_pdfsrclist_frompath(pdfsrcpaths: list[str]):
+    def create_pdfsrclist_frompath(pdfsrcpaths: List[str]):
         sources = PdfSrcList()
         for path in pdfsrcpaths:
             srcfile = PdfSrcFile(path)

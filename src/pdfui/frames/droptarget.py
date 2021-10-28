@@ -1,4 +1,5 @@
 import wx
+from typing import List
 
 
 class ListFileDropTarget(wx.FileDropTarget):
@@ -7,7 +8,7 @@ class ListFileDropTarget(wx.FileDropTarget):
         self.__list = list
         self.__ext_filter = ext_filter
 
-    def OnDropFiles(self, x, y, filenames: list[str]):
+    def OnDropFiles(self, x, y, filenames: List[str]):
         filtered_filenames = [x for x in filenames
                               if x.endswith(self.__ext_filter)]
         self.__list.AppendItems(filtered_filenames)
