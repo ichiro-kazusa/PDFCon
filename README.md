@@ -9,7 +9,7 @@ If you have not use pipenv, install it.
 pip install pipenv
 ```
 
-Clone this repository, then run `pipenv install`
+Clone this repository, and move into repository folder. Then run `pipenv install`
 
 ```bash
 pipenv install
