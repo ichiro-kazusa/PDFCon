@@ -1,7 +1,7 @@
 PDFCon
 ======================
 
-PDFCon is a pdf manupilating tool with GUI. Powered by pikepdf/wxWidgets.
+PDFCon is a pdf manupilating tool with GUI. Powered by pikepdf/wxWidgets, requires python &ge; 3.8  .
 
 This program now impelemts functions to concat/encrypt/decrypt PDF. It tested only on Windows.
 
@@ -31,6 +31,10 @@ pipenv run python mainw.py
 ```
 
 # Release Notes
+
+## v0.0.5
+
+* new: supports python 3.8
 
 ## v0.0.4
 
