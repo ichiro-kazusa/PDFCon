@@ -40,7 +40,6 @@ Application
 PDF Backend
 * refactor: log system
 * enhance: unit test
-* enhance: change pdf engine to pikepdf from pymupdf.
 * enhance: read check for file content is really pdf.
 
 ## v0.0.3
@@ -51,8 +50,7 @@ GUI
 * enhanced: execute button is centerized
 
 PDF Backend
-* new: decrypt implemented with pymupdf
-* enhance: concat implementation is now with pymupdf
+* new: decrypt implemented
 * del: it does not use PyPDF2 anymore.
 * fix: close source file
 * fix: error handling when source failed to open
