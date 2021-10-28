@@ -1,6 +1,25 @@
 PDFCon
 ======================
 
+# Usage
+
+If you have not use pipenv, install it.
+
+```bash
+pip install pipenv
+```
+
+Clone this repository, then run `pipenv install`
+
+```bash
+pipenv install
+```
+
+Finally, you can run application via pipenv.
+
+```bash
+pipenv run python src/mainw.py
+```
 
 
 # Release Notes
