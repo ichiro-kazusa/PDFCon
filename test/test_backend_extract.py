@@ -5,6 +5,7 @@ import pytest
 from src.pdf.appsvc import PDFAppSevice
 from src.pdf.event import error, event
 from src.pdf.repo.pdfrepo import PikePDFRepository
+from src.pdf.domain.pdffile import PDFSrcPath, PDFDstPath
 
 repo = PikePDFRepository()
 app_service = PDFAppSevice(repo)
@@ -53,3 +54,32 @@ def test_extract_nodest():
 
     assert verify_error(e.value, error.OutputFileNotSpccified())
 
+
+def test_extract_filenotfound():
+    src = r'test/rsc/notfound.pdf'
+    dst = r'test/rsc/extract.pdf'
+
+    with pytest.raises(error.FileReadError) as e:
+        repo.extract(PDFSrcPath(src), '1-10', PDFDstPath(dst))
+
+    assert verify_error(e.value, error.FileReadError(src))
+
+
+def test_extract_notpdf():
+    src = r'test/rsc/non-pdf.pdf'
+    dst = r'test/rsc/extract.pdf'
+
+    with pytest.raises(error.NotPDFFileError) as e:
+        repo.extract(PDFSrcPath(src), '1-10', PDFDstPath(dst))
+
+    assert verify_error(e.value, error.NotPDFFileError(src))
+
+
+def test_extract_passwordfail():
+    src = r'test/rsc/encrypted.pdf'
+    dst = r'test/rsc/extract.pdf'
+
+    with pytest.raises(error.DecryptPasswordFail) as e:
+        repo.extract(PDFSrcPath(src), '1-10', PDFDstPath(dst))
+
+    assert verify_error(e.value, error.DecryptPasswordFail())
