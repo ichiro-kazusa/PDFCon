@@ -31,18 +31,24 @@ def test_pages_single():
     assert list(pl12.iter()) == [(10, 10)]
 
 
-def test_page_error():
+def test_page_invalidpagelist():
+    # zero page number
+    test1 = '0-end'
+    with pytest.raises(error.InvalidPageList) as e:
+        PageListWithEnd.create_pagelist_from_str(test1)
+    assert verify_error(e.value, error.InvalidPageList())
+
     # minus page number
     test1 = '-1-end'
-    with pytest.raises(error.InvalidPageString) as e:
+    with pytest.raises(error.InvalidPageList) as e:
         PageListWithEnd.create_pagelist_from_str(test1)
-    assert verify_error(e.value, error.InvalidPageString())
+    assert verify_error(e.value, error.InvalidPageList())
 
     # invalid charadters
     test2 = 'a-6'
-    with pytest.raises(error.InvalidPageString) as e:
+    with pytest.raises(error.InvalidPageList) as e:
         PageListWithEnd.create_pagelist_from_str(test2)
-    assert verify_error(e.value, error.InvalidPageString())
+    assert verify_error(e.value, error.InvalidPageList())
 
 
 def test_page_normal():
@@ -52,6 +58,7 @@ def test_page_normal():
     pagelist_woend = PageList(pagelist, maxpagenum)
 
     assert pagelist_woend.as_list() == [4, 3, 2, 1]
+    assert pagelist_woend.as_zero_based_list() == [3, 2, 1, 0]
 
 
 def test_page_normal_withend():
@@ -61,6 +68,7 @@ def test_page_normal_withend():
     pagelist_woend = PageList(pagelist, maxpagenum)
 
     assert pagelist_woend.as_list() == [5, 4, 3, 2, 4, 5]
+    assert pagelist_woend.as_zero_based_list() == [4, 3, 2, 1, 3, 4]
 
 
 def test_page_indexoutofrange():

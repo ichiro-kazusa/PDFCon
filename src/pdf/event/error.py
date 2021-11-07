@@ -47,7 +47,7 @@ class DecryptPasswordFail(PDFError):
 ######################
 # Extract Errors
 ######################
-class InvalidPageString(PDFError):
+class InvalidPageList(PDFError):
     pass
 
 

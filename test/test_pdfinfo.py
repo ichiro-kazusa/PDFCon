@@ -11,11 +11,11 @@ repo = PikePDFRepository()
 
 
 def test_pdfinfo_maxpagenum():
-    src = r'test/rsc/a.pdf'
+    src = r'test/rsc/multipage.pdf'
     srcobj = PDFSrcPath(src)
     info: PDFInfo = repo.retrieve_pdfinfo(srcobj)
     assert info.PDFPath.path == src
-    assert info.NumOfPages == 1
+    assert info.NumOfPages == 10
 
 
 def test_pdfinfo_filenotfound():

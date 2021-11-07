@@ -120,14 +120,15 @@ class PikePDFRepository(IPDFRepository):
                 self.__es.notify(event.EventFileRead(pdfsrc.path))
 
                 # backup all pages to memory
-                page_backup = pikepdf.Pdf()
+                page_backup = pikepdf.Pdf.new()
                 page_backup.pages.extend(document.pages)
 
-                del document.pages[:]  # delete all pages
+                # delete all pages
+                del document.pages[:]
 
-                for pageidx in pagelist.as_list():
-                    # note that pageidx starts from 1
-                    document.pages.append(page_backup.pages[pageidx-1])
+                # re-append pages from backup by pagelist
+                for pageidx in pagelist.as_zero_based_list():
+                    document.pages.append(page_backup.pages[pageidx])
 
                 self.__es.notify(event.EventFileWrite(pdfdst.path))
                 document.save(pdfdst.path)

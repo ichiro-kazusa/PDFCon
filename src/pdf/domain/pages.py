@@ -29,16 +29,19 @@ class PageListWithEnd:
 
     def __verify_pagelistrule(self):
         """checks page string rule
-        * pagelist is a list of 2-elements tuple of {number or 'end'}
+        * pagelist is a list of 2-elements tuple of {int or 'end'}
+        * int must be > 0
         """
         if type(self.__pagelist) != list:
-            raise ValueError()
+            raise error.InvalidPageList()
         for pair in self.__pagelist:
             if type(pair) != tuple or len(pair) != 2:
-                raise ValueError()
+                raise error.InvalidPageList()
             for elem in pair:
+                if type(elem) == int and not elem > 0:
+                    raise error.InvalidPageList()
                 if type(elem) != int and elem != 'end':
-                    raise ValueError()
+                    raise error.InvalidPageList()
 
     def iter(self) -> Iterator[Tuple[TPage, TPage]]:
         return (e for e in self.__pagelist)
@@ -55,7 +58,7 @@ class PageListWithEnd:
 
         match = __block_pattern.match(block)
         if match is None:
-            raise error.InvalidPageString(f'{block}')
+            raise error.InvalidPageList(f'{block}')
 
         res = match.groups()
         if res[0] is None:
@@ -85,9 +88,9 @@ class PageList:
     def __init__(self, pagelistwithend: PageListWithEnd,
                  maxpagenum: int) -> None:
         self.__maxpagenum = maxpagenum
-        self.__pagelist = self.replace_end_with_maxpage(pagelistwithend,
-                                                        maxpagenum)
-        self.check_pagenum_outofrange()
+        self.__pagelist = self.__replace_end_with_maxpage(pagelistwithend,
+                                                          maxpagenum)
+        self.__check_pagenum_outofrange()
 
     def iter(self):
         return (e for e in self.__pagelist)
@@ -102,8 +105,13 @@ class PageList:
                 ret += list(range(x, y-1, -1))
         return ret
 
-    def replace_end_with_maxpage(self, pagelist: PageListWithEnd,
-                                 maxpagenum: int) -> List[Tuple[int, int]]:
+    def as_zero_based_list(self):
+        # note that 'as_list' starts from 1
+        list_1start = self.as_list()
+        return [x-1 for x in list_1start]
+
+    def __replace_end_with_maxpage(self, pagelist: PageListWithEnd,
+                                   maxpagenum: int) -> List[Tuple[int, int]]:
         replaced: List[Tuple[int, int]] = []
         for (x, y) in pagelist.iter():
             if type(x) == str and x == 'end':
@@ -118,7 +126,7 @@ class PageList:
 
         return replaced
 
-    def check_pagenum_outofrange(self) -> None:
+    def __check_pagenum_outofrange(self) -> None:
         for pair in self.__pagelist:
             for elem in pair:
                 if type(elem) == int and elem > self.__maxpagenum:
