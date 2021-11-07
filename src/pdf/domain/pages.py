@@ -1,6 +1,6 @@
 import re
-from typing import Iterator, Tuple, Union
-from functools import reduce
+from typing import Iterator, Tuple, Union, List
+# from functools import reduce
 
 from ..event import error
 
@@ -8,7 +8,7 @@ from ..event import error
 TPage = Union[int, str]  # type alias
 
 
-class PageList:
+class PageListWithEnd:
     """value object to store page information.
     it can contain number, '-', 'end', space.
     example) 1, 4-6, 7-end """
@@ -20,31 +20,42 @@ class PageList:
     * space separation for each character is allowed.
     * space separation in number is not allowed
       (these are NG) 42 -> 4 2, end -> e nd
-    * every number must apperar as ascending order
     * THIS RULE ASSUMED THE PAGE NUMBER STARTS FROM 1
-    """
+     """
 
-    __block_pattern = re.compile(r'^(\d+|end) *- *(\d+|end)$|^(\d+|end)$')
+    def __init__(self, pagelist: List[Tuple[TPage, TPage]]):
+        self.__pagelist = pagelist
+        self.__verify_pagelistrule()
 
-    def __init__(self, pagesstr: str):
+    def __verify_pagelistrule(self):
+        """checks page string rule
+        * pagelist is a list of 2-elements tuple of {number or 'end'}
+        """
+        if type(self.__pagelist) != list:
+            raise ValueError()
+        for pair in self.__pagelist:
+            if type(pair) != tuple or len(pair) != 2:
+                raise ValueError()
+            for elem in pair:
+                if type(elem) != int and elem != 'end':
+                    raise ValueError()
 
-        pageslist = pagesstr.split(',')
+    def iter(self) -> Iterator[Tuple[TPage, TPage]]:
+        return (e for e in self.__pagelist)
 
-        self.__pagelist = []
-        for block in pageslist:
-            result = self.__parse_block(block)  # raises InvalidPatternError
-            self.__pagelist.append(result)
+    @staticmethod
+    def __parse_block(block: str) -> Tuple[TPage, TPage]:
 
-    def __parse_block(self, block: str) -> Tuple[TPage, TPage]:
+        __block_pattern = re.compile(r'^(\d+|end) *- *(\d+|end)$|^(\d+|end)$')
 
         def __int_or_end(page: str) -> TPage:
             return 'end' if page == 'end' else int(page)
 
         block = block.strip()  # delete leading and trailing spaces
 
-        match = self.__block_pattern.match(block)
+        match = __block_pattern.match(block)
         if match is None:
-            raise error.InvalidPatternError(f'{block}')
+            raise error.InvalidPageString(f'{block}')
 
         res = match.groups()
         if res[0] is None:
@@ -55,18 +66,60 @@ class PageList:
             page1 = __int_or_end(res[1])
             return (page0, page1)
 
-    def __verify_order(self):
-        """rule: 
-        * every int must be ascending order
-        * 'end' can appear at the end of list
-        """
-        # flatten
-        flatten = reduce(lambda x, y: list(x)+list(y), self.__pagelist)
-        # 'end' does not exist or exist at the end of the list
-        if flatten.count('end') > 1 or flatten.index('end') != len(flatten)-1:
-            raise Exception()
-        # every integer sorted in ascending order
-        filtered_flatten = [x for x in flatten if type(x) == int]
+    @staticmethod
+    def create_pagelist_from_str(pagestring: str) -> 'PageListWithEnd':
+        pagestrlist = pagestring.split(',')
 
-    def iter(self) -> Iterator[Tuple[TPage, TPage]]:
+        pagelist = []
+        for block in pagestrlist:
+            result = PageListWithEnd.__parse_block(
+                block)  # raises InvalidPageString
+            pagelist.append(result)
+
+        return PageListWithEnd(pagelist)
+
+
+class PageList:
+    """PageList without 'end'"""
+
+    def __init__(self, pagelistwithend: PageListWithEnd,
+                 maxpagenum: int) -> None:
+        self.__maxpagenum = maxpagenum
+        self.__pagelist = self.replace_end_with_maxpage(pagelistwithend,
+                                                        maxpagenum)
+        self.check_pagenum_outofrange()
+
+    def iter(self):
         return (e for e in self.__pagelist)
+
+    def as_list(self) -> List[int]:
+        ret: List[int] = []
+        for pairs in self.__pagelist:
+            (x, y) = pairs
+            if x <= y:  # normal order
+                ret += list(range(x, y+1))
+            if x > y:  # reversed order
+                ret += list(range(x, y-1, -1))
+        return ret
+
+    def replace_end_with_maxpage(self, pagelist: PageListWithEnd,
+                                 maxpagenum: int) -> List[Tuple[int, int]]:
+        replaced: List[Tuple[int, int]] = []
+        for (x, y) in pagelist.iter():
+            if type(x) == str and x == 'end':
+                x_ = maxpagenum
+            elif type(x) == int:
+                x_ = x
+            if type(y) == str and y == 'end':
+                y_ = maxpagenum
+            elif type(y) == int:
+                y_ = y
+            replaced.append((x_, y_))
+
+        return replaced
+
+    def check_pagenum_outofrange(self) -> None:
+        for pair in self.__pagelist:
+            for elem in pair:
+                if type(elem) == int and elem > self.__maxpagenum:
+                    raise error.PageIndexOutOfRange()

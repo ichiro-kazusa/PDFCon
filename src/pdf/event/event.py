@@ -30,6 +30,10 @@ class EventEncryptComplete(PDFEvent):
     pass
 
 
+class EventExtractComplete(PDFEvent):
+    pass
+
+
 ##################################################
 # Observer Pattern for Event Subject/Listener
 ##################################################

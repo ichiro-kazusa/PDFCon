@@ -3,23 +3,32 @@ import pikepdf
 
 
 from ..event import error, event
-from ..domain.pdffile import PdfDstFile, PdfSrcFile, PdfSrcList
+from ..domain.pdffile import PDFDstPath, PDFSrcPath, PDFSrcPathList
 from ..domain.encrypt import Encryption
+from ..domain.pdfinfo import PDFInfo
+from ..domain.pages import PageList
 
 
 class IPDFRepository(ABC):
     def __init__(self):
         pass
 
-    def concat(self, pdfsrclist: PdfSrcList, pdfdst: PdfDstFile):
+    def concat(self, pdfsrclist: PDFSrcPathList, pdfdst: PDFDstPath):
         pass
 
-    def decrypt(self, pdfsrc: PdfSrcFile, password: str, pdfdst: PdfDstFile):
+    def decrypt(self, pdfsrc: PDFSrcPath, password: str, pdfdst: PDFDstPath):
         pass
 
-    def encrypt(self, pdfsrc: PdfSrcFile,
-                pdfdst: PdfDstFile, password: Encryption,
+    def encrypt(self, pdfsrc: PDFSrcPath,
+                pdfdst: PDFDstPath, password: Encryption,
                 readpass: str):
+        pass
+
+    def retrieve_pdfinfo(self, pdfsrc: PDFSrcPath) -> PDFInfo:
+        pass
+
+    def extract(self, pdfsrc: PDFSrcPath,
+                pagelist: PageList, pdfdst: PDFDstPath):
         pass
 
 
@@ -28,7 +37,7 @@ class PikePDFRepository(IPDFRepository):
     def __init__(self):
         self.__es = event.get_event_subject()
 
-    def concat(self, pdfsrclist: PdfSrcList, pdfdst: PdfDstFile):
+    def concat(self, pdfsrclist: PDFSrcPathList, pdfdst: PDFDstPath):
         doc_save = pikepdf.new()
 
         for file in pdfsrclist.iter():
@@ -49,7 +58,7 @@ class PikePDFRepository(IPDFRepository):
         doc_save.save(pdfdst.path)
         self.__es.notify(event.EventConcatComplete())
 
-    def decrypt(self, pdfsrc: PdfSrcFile, password: str, pdfdst: PdfDstFile):
+    def decrypt(self, pdfsrc: PDFSrcPath, password: str, pdfdst: PDFDstPath):
         try:
             with pikepdf.open(pdfsrc.path, password=password) as document:
                 self.__es.notify(event.EventFileRead(pdfsrc.path))
@@ -69,8 +78,8 @@ class PikePDFRepository(IPDFRepository):
             self.__es.notify(event.EventFileRead(pdfsrc.path))
             raise error.DecryptPasswordFail()
 
-    def encrypt(self, pdfsrc: PdfSrcFile,
-                pdfdst: PdfDstFile, encryption: Encryption,
+    def encrypt(self, pdfsrc: PDFSrcPath,
+                pdfdst: PDFDstPath, encryption: Encryption,
                 readpass: str = ''):
         try:
             with pikepdf.open(pdfsrc.path, password=readpass) as document:
@@ -82,6 +91,47 @@ class PikePDFRepository(IPDFRepository):
                 self.__es.notify(event.EventFileWrite(pdfdst.path))
                 document.save(pdfdst.path, encryption=enc)
                 self.__es.notify(event.EventEncryptComplete())
+
+        except FileNotFoundError:
+            raise error.FileReadError(pdfsrc.path)
+        except pikepdf.PdfError:
+            raise error.NotPDFFileError(pdfsrc.path)
+        except pikepdf.PasswordError:
+            self.__es.notify(event.EventFileRead(pdfsrc.path))
+            raise error.DecryptPasswordFail()
+
+    def retrieve_pdfinfo(self, pdfsrc: PDFSrcPath) -> PDFInfo:
+        try:
+            with pikepdf.open(pdfsrc.path) as document:
+                numofpages: int = len(document.pages)
+                return PDFInfo(pdfsrc, numofpages)
+
+        except FileNotFoundError:
+            raise error.FileReadError(pdfsrc.path)
+        except pikepdf.PdfError:
+            raise error.NotPDFFileError(pdfsrc.path)
+        except pikepdf.PasswordError:
+            raise error.DecryptPasswordFail()
+
+    def extract(self, pdfsrc: PDFSrcPath,
+                pagelist: PageList, pdfdst: PDFDstPath):
+        try:
+            with pikepdf.open(pdfsrc.path) as document:
+                self.__es.notify(event.EventFileRead(pdfsrc.path))
+
+                # backup all pages to memory
+                page_backup = pikepdf.Pdf()
+                page_backup.pages.extend(document.pages)
+
+                del document.pages[:]  # delete all pages
+
+                for pageidx in pagelist.as_list():
+                    # note that pageidx starts from 1
+                    document.pages.append(page_backup.pages[pageidx-1])
+
+                self.__es.notify(event.EventFileWrite(pdfdst.path))
+                document.save(pdfdst.path)
+                self.__es.notify(event.EventExtractComplete())
 
         except FileNotFoundError:
             raise error.FileReadError(pdfsrc.path)

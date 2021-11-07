@@ -3,7 +3,7 @@
 from typing import Generator, List
 
 
-class PdfSrcFile:
+class PDFSrcPath:
     """Value Object which specifies PDF source file"""
 
     __slots__ = ["__srcpath"]
@@ -22,16 +22,16 @@ class PdfSrcFile:
         return self.path == ""
 
 
-class PdfSrcList:
+class PDFSrcPathList:
     """First Class Collection to handle PdfSrcFile object"""
 
-    def __init__(self, pdfsrcfiles: List[PdfSrcFile] = None):
+    def __init__(self, pdfsrcfiles: List[PDFSrcPath] = None):
         self.__pdfsrclist = [] if pdfsrcfiles is None else pdfsrcfiles
 
-    def append(self, pdfsrc: PdfSrcFile) -> None:
+    def append(self, pdfsrc: PDFSrcPath) -> None:
         self.__pdfsrclist.append(pdfsrc)
 
-    def iter(self) -> Generator[PdfSrcFile, None, None]:
+    def iter(self) -> Generator[PDFSrcPath, None, None]:
         return (e for e in self.__pdfsrclist)
 
     def is_empty(self) -> bool:
@@ -39,14 +39,14 @@ class PdfSrcList:
 
     @staticmethod
     def create_pdfsrclist_frompath(pdfsrcpaths: List[str]):
-        sources = PdfSrcList()
+        sources = PDFSrcPathList()
         for path in pdfsrcpaths:
-            srcfile = PdfSrcFile(path)
+            srcfile = PDFSrcPath(path)
             sources.append(srcfile)
         return sources
 
 
-class PdfDstFile:
+class PDFDstPath:
     """Value Object which specifies PDF destination file"""
 
     __slots__ = ["__dstpath"]

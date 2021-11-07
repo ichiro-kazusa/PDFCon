@@ -47,9 +47,9 @@ class DecryptPasswordFail(PDFError):
 ######################
 # Extract Errors
 ######################
-class InvalidPatternError(PDFError):
+class InvalidPageString(PDFError):
     pass
 
 
-class PageNumberOutOfRange(PDFError):
+class PageIndexOutOfRange(PDFError):
     pass
