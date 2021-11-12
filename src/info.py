@@ -1,2 +1,2 @@
 APPNAME = 'PDFCon'
-VERSION = '0.0.6dev'
+VERSION = '0.0.6'
