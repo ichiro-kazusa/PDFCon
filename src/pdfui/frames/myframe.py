@@ -129,6 +129,72 @@ class MyFrame (wx.Frame):
         self.concat_panel.Layout()
         concat_panelsizer.Fit(self.concat_panel)
         self.main_notebook.AddPage(self.concat_panel, u"concat", False)
+        self.extract_panel = wx.Panel(
+            self.main_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
+        extract_panelsizer = wx.FlexGridSizer(2, 1, 0, 0)
+        extract_panelsizer.AddGrowableCol(0)
+        extract_panelsizer.SetFlexibleDirection(wx.BOTH)
+        extract_panelsizer.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_SPECIFIED)
+
+        extract_srcsizer = wx.StaticBoxSizer(wx.StaticBox(
+            self.extract_panel, wx.ID_ANY, u"source"), wx.VERTICAL)
+
+        self.extract_srcpicker = wx.FilePickerCtrl(extract_srcsizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, u"Select a file",
+                                                   u"*.pdf", wx.DefaultPosition, wx.DefaultSize, wx.FLP_FILE_MUST_EXIST | wx.FLP_OPEN | wx.FLP_SMALL | wx.FLP_USE_TEXTCTRL)
+        extract_srcsizer.Add(self.extract_srcpicker, 0, wx.ALL | wx.EXPAND, 5)
+
+        fgSizer71 = wx.FlexGridSizer(0, 2, 0, 0)
+        fgSizer71.SetFlexibleDirection(wx.BOTH)
+        fgSizer71.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_SPECIFIED)
+
+        self.m_staticText11 = wx.StaticText(extract_srcsizer.GetStaticBox(
+        ), wx.ID_ANY, u"page(s)", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT)
+        self.m_staticText11.Wrap(-1)
+
+        fgSizer71.Add(self.m_staticText11, 0,
+                      wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
+
+        self.extract_pagestring = wx.TextCtrl(extract_srcsizer.GetStaticBox(
+        ), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size(300, -1), 0)
+        self.extract_pagestring.SetToolTip(
+            u"Specify page ranges separated with comma.\n'end' can be used as the last page index.\ne.g. 1-3, 5, 7-end")
+
+        fgSizer71.Add(self.extract_pagestring, 0,
+                      wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
+
+        extract_srcsizer.Add(fgSizer71, 1, wx.EXPAND, 5)
+
+        extract_panelsizer.Add(extract_srcsizer, 1, wx.EXPAND, 5)
+
+        extract_dstsizer = wx.StaticBoxSizer(wx.StaticBox(
+            self.extract_panel, wx.ID_ANY, u"destination"), wx.VERTICAL)
+
+        fgSizer62 = wx.FlexGridSizer(1, 3, 0, 0)
+        fgSizer62.AddGrowableCol(0)
+        fgSizer62.SetFlexibleDirection(wx.BOTH)
+        fgSizer62.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_SPECIFIED)
+
+        self.extract_dstpicker = wx.FilePickerCtrl(extract_dstsizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, u"Select a file",
+                                                   u"*.pdf", wx.DefaultPosition, wx.DefaultSize, wx.FLP_OVERWRITE_PROMPT | wx.FLP_SAVE | wx.FLP_SMALL | wx.FLP_USE_TEXTCTRL)
+        fgSizer62.Add(self.extract_dstpicker, 0, wx.ALL | wx.EXPAND, 5)
+
+        self.extract_filldstbtn = wx.Button(extract_dstsizer.GetStaticBox(
+        ), wx.ID_ANY, u"auto fill", wx.DefaultPosition, wx.DefaultSize, 0)
+        fgSizer62.Add(self.extract_filldstbtn, 0, wx.ALL, 5)
+
+        extract_dstsizer.Add(fgSizer62, 1, wx.EXPAND, 5)
+
+        self.extract_extractbtn = wx.Button(extract_dstsizer.GetStaticBox(
+        ), wx.ID_ANY, u"extract", wx.DefaultPosition, wx.DefaultSize, 0)
+        extract_dstsizer.Add(self.extract_extractbtn, 0,
+                             wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
+
+        extract_panelsizer.Add(extract_dstsizer, 1, wx.EXPAND, 5)
+
+        self.extract_panel.SetSizer(extract_panelsizer)
+        self.extract_panel.Layout()
+        extract_panelsizer.Fit(self.extract_panel)
+        self.main_notebook.AddPage(self.extract_panel, u"extract", False)
         self.encrypt_panel = wx.Panel(
             self.main_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
         encrypt_panelsizer = wx.FlexGridSizer(2, 1, 0, 0)
@@ -310,6 +376,10 @@ class MyFrame (wx.Frame):
         self.concat_mvdnbtn.Bind(wx.EVT_BUTTON, self.concat_clickmvdn)
         self.concat_mvbtmbtn.Bind(wx.EVT_BUTTON, self.concat_clickmvbtm)
         self.concat_concatbutton.Bind(wx.EVT_BUTTON, self.concat_clickconcat)
+        self.extract_filldstbtn.Bind(
+            wx.EVT_BUTTON, self.extract_clickfilldstbtn)
+        self.extract_extractbtn.Bind(
+            wx.EVT_BUTTON, self.extract_clickextractbtn)
         self.encrypt_needpasschkbox.Bind(
             wx.EVT_CHECKBOX, self.encrypt_chkreadpassbox)
         self.encrypt_filldstbtn.Bind(
@@ -350,6 +420,12 @@ class MyFrame (wx.Frame):
         event.Skip()
 
     def concat_clickconcat(self, event):
+        event.Skip()
+
+    def extract_clickfilldstbtn(self, event):
+        event.Skip()
+
+    def extract_clickextractbtn(self, event):
         event.Skip()
 
     def encrypt_chkreadpassbox(self, event):

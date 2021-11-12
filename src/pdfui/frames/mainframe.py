@@ -41,6 +41,8 @@ class GUIEventListener(event.BaseEventListener):
             self.__logger.log('decrypt completed.')
         elif isinstance(event_, event.EventEncryptComplete):
             self.__logger.log('encrypt completed.')
+        elif isinstance(event_, event.EventExtractComplete):
+            self.__logger.log('extract completed.')
         else:
             self.__logger.log('unknown event.')
 
@@ -64,6 +66,10 @@ class GUiErrorHandler():
             self.__logger.err('file is not encrypted.')
         elif isinstance(error_, error.DecryptPasswordFail):
             self.__logger.err('password failed.')
+        elif isinstance(error_, error.InvalidPageList):
+            self.__logger.err('invalid page specification.')
+        elif isinstance(error_, error.PageIndexOutOfRange):
+            self.__logger.err('page index is out of range.')
         else:
             self.__logger.err('unknown error.')
 
@@ -78,6 +84,10 @@ class MainFrame(MyFrame):
         concat_droptarget = ListFileDropTarget(self.concat_srclistbox,
                                                ext_filter='.pdf')
         self.concat_srclistbox.SetDropTarget(concat_droptarget)
+        # extract source picker
+        extract_droptarget = PickerFileDropTarget(self.extract_srcpicker,
+                                                  ext_filter='.pdf')
+        self.extract_srcpicker.SetDropTarget(extract_droptarget)
         # decrypt source picker
         decrypt_droptarget = PickerFileDropTarget(self.decrypt_srcpicker,
                                                   ext_filter='.pdf')
@@ -135,6 +145,21 @@ class MainFrame(MyFrame):
         destination = self.concat_destpicker.GetPath()
         try:
             self.__pdf_app_service.concat_pdf(sources, destination)
+        except error.PDFError as e:
+            self.__guierrorhandler.handle(e)
+
+    def extract_clickfilldstbtn(self, _):
+        source: str = self.extract_srcpicker.GetPath()
+        if source.endswith('.pdf'):
+            dstpath = source[:-4] + '_extract.pdf'
+            self.extract_dstpicker.SetPath(dstpath)
+
+    def extract_clickextractbtn(self, event):
+        source = self.extract_srcpicker.GetPath()
+        pagestring = self.extract_pagestring.GetValue()
+        destination = self.extract_dstpicker.GetPath()
+        try:
+            self.__pdf_app_service.extract_pdf(source, pagestring, destination)
         except error.PDFError as e:
             self.__guierrorhandler.handle(e)
 
