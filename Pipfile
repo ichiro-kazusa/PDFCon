@@ -12,6 +12,7 @@ mypy = "*"
 autopep8 = "*"
 flake8 = "*"
 pytest = "*"
+pyinstaller = "*"
 
 [requires]
 python_version = "3.8"

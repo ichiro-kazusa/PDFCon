@@ -154,7 +154,7 @@ class MainFrame(MyFrame):
             dstpath = source[:-4] + '_extract.pdf'
             self.extract_dstpicker.SetPath(dstpath)
 
-    def extract_clickextractbtn(self, event):
+    def extract_clickextractbtn(self, _):
         source = self.extract_srcpicker.GetPath()
         pagestring = self.extract_pagestring.GetValue()
         destination = self.extract_dstpicker.GetPath()

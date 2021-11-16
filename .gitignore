@@ -9,3 +9,5 @@ a_encrypted.pdf
 encrypted_encrypted.pdf
 extract.pdf
 .vscodecounter*
+build
+dist

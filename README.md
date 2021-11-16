@@ -32,6 +32,13 @@ pipenv run python mainw.py
 
 # Release Notes
 
+## v0.0.7
+
+## v0.0.6
+
+Application
+* new: page extract
+
 ## v0.0.5
 
 * new: supports python 3.8
@@ -81,7 +88,7 @@ PDF Backend
 ## TODO
 
 Application
-* new: extract pages
+* renew: application icon renewal
 
 PDF Backend
 * refactor: use DI for create repository
@@ -89,5 +96,4 @@ PDF Backend
 ## Future
 
 Application
-* extract pages to single file
 * split into single-page files
