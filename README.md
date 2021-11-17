@@ -3,11 +3,15 @@ PDFCon
 
 PDFCon is a pdf manupilating tool with GUI. Powered by pikepdf/wxWidgets, requires python &ge; 3.8  .
 
-This program now impelemts functions to concat/encrypt/decrypt PDF. It tested only on Windows.
+This program now impelemts functions to concat/extract/encrypt/decrypt PDF. It tested only on Windows.
 
-![screenshot](https://user-images.githubusercontent.com/20105619/139176190-b6c960a7-67eb-46b2-96ba-36e9c703b811.png)
+![image](https://user-images.githubusercontent.com/20105619/142193290-f4161e91-5d20-4187-b8ee-51fd60bc4ec4.png)
+
 
 # Usage
+## start with binary package
+
+Download binary package from [Release Page](https://github.com/ichiro-kazusa/PDFCon/releases). Now only on Windows x64.
 
 ## start with python command
 
@@ -29,60 +33,6 @@ Finally, you can run application via pipenv.
 ```bash
 pipenv run python mainw.py
 ```
-
-# Release Notes
-
-## v0.0.7
-
-## v0.0.6
-
-Application
-* new: page extract
-
-## v0.0.5
-
-* new: supports python 3.8
-
-## v0.0.4
-
-Application
-* new: encryption
-
-PDF Backend
-* refactor: log system
-* enhance: unit test
-* enhance: read check for file content is really pdf.
-
-## v0.0.3
-
-GUI
-* new: add decrypt panel
-* new: autofill for decrypt destination
-* enhanced: execute button is centerized
-
-PDF Backend
-* new: decrypt implemented
-* del: it does not use PyPDF2 anymore.
-* fix: close source file
-* fix: error handling when source failed to open
-* refactor: rewrite file open with 'with' statement
-
-## v0.0.2
-
-Application
-* new: display version information
-
-GUI 
-* new: File Drag & Drop for concat source list
-* new: keyboard operations for concat source list
-  * Ctrl+A, DEL, ALT+UP, ALT+DOWN, ALT+HOME, ALT+END
-* fix: concat source move error when nothing selected
-
-PDF Backend
-* refactor: PdfSrcFile and similar objects make not be file object.
-
-## v0.0.1
-* concat implemented
 
 # Development
 ## TODO
