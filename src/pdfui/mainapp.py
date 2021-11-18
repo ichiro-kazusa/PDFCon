@@ -17,7 +17,7 @@ class MainApp:
         frame = MainFrame(None)
         frame.SetTitle(title)
 
-        frame.SetIcon(wx.Icon(icon_path('appicon.ico')))
+        frame.SetIcon(wx.Icon(icon_path('appicon_grad.ico')))
         frame.Show()
 
     def start_main_loop(self):

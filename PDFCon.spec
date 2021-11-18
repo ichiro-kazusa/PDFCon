@@ -20,7 +20,7 @@ a = Analysis(['mainw.py'],
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
-a.datas += [('appicon.ico', '.\\appicon.ico', 'Data')]
+a.datas += [('appicon_grad.ico', '.\\appicon_grad.ico', 'Data')]
 
 exe = EXE(pyz,
           a.scripts,

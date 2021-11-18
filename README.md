@@ -30,65 +30,8 @@ Finally, you can run application via pipenv.
 pipenv run python mainw.py
 ```
 
-# Release Notes
-
-## v0.0.7
-
-## v0.0.6
-
-Application
-* new: page extract
-
-## v0.0.5
-
-* new: supports python 3.8
-
-## v0.0.4
-
-Application
-* new: encryption
-
-PDF Backend
-* refactor: log system
-* enhance: unit test
-* enhance: read check for file content is really pdf.
-
-## v0.0.3
-
-GUI
-* new: add decrypt panel
-* new: autofill for decrypt destination
-* enhanced: execute button is centerized
-
-PDF Backend
-* new: decrypt implemented
-* del: it does not use PyPDF2 anymore.
-* fix: close source file
-* fix: error handling when source failed to open
-* refactor: rewrite file open with 'with' statement
-
-## v0.0.2
-
-Application
-* new: display version information
-
-GUI 
-* new: File Drag & Drop for concat source list
-* new: keyboard operations for concat source list
-  * Ctrl+A, DEL, ALT+UP, ALT+DOWN, ALT+HOME, ALT+END
-* fix: concat source move error when nothing selected
-
-PDF Backend
-* refactor: PdfSrcFile and similar objects make not be file object.
-
-## v0.0.1
-* concat implemented
-
 # Development
 ## TODO
-
-Application
-* renew: application icon renewal
 
 PDF Backend
 * refactor: use DI for create repository
