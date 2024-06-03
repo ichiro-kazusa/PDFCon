@@ -5,9 +5,8 @@ from .frames.mainframe import MainFrame
 
 
 def icon_path(filename):
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, filename)
-    return os.path.join(os.path.abspath('.'), filename)
+    dirname = os.path.dirname(sys.argv[0])
+    return os.path.join(os.path.abspath(dirname), filename)
 
 
 class MainApp:
