@@ -11,3 +11,8 @@ extract.pdf
 .vscodecounter*
 build
 dist
+.venv*
+*.build
+*.dist
+*.onefile-build
+*.exe
